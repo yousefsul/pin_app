@@ -32,6 +32,12 @@ dependencies:
   # The following adds the animated splash screen application.
   animated_splash_screen: ^1.1.0
 
+  # The following adds pin code to application.
+  pin_code_fields: ^7.2.0
+
+  # The following adds sounds effect to application.
+  better_sound_effect: ^0.0.1
+
 
 dev_dependencies:
   flutter_test:
@@ -49,8 +55,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
-
+    - assets/images/
+    - assets/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-        splash: Image.asset('assets/lock.png'),
+        splash: Image.asset('assets/images/lock.png'),
         nextScreen: PinPage(),
         splashTransition: SplashTransition.rotationTransition,
         backgroundColor: Colors.deepPurple[200]!,
