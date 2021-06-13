@@ -47,6 +47,9 @@ dependencies:
   # The following provides top bar animation
   top_snackbar_flutter: ^1.0.0
 
+  # The following provides sending data to the server
+  http: ^0.13.3
+
 
 dev_dependencies:
   flutter_test:

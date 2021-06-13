@@ -82,7 +82,7 @@ class _PinPageState extends State<PinPage> {
                   animationType: AnimationType.fade,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter pin code';
+                      return 're-enter pin code';
                     }
                     return null;
                   },
