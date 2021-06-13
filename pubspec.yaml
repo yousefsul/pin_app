@@ -27,7 +27,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.3
 
   # The following adds the animated splash screen application.
   animated_splash_screen: ^1.1.0
@@ -39,10 +39,13 @@ dependencies:
   better_sound_effect: ^0.0.1
 
   # The following access and manage the device's contacts
-  contacts_service: ^0.3.10
+  contacts_service: ^0.6.1
   
   # The following provides request permissions and check their status
-  permission_handler: ^5.0.1+1
+  permission_handler: ^8.1.0
+
+  # The following provides top bar animation
+  top_snackbar_flutter: ^1.0.0
 
 
 dev_dependencies:
