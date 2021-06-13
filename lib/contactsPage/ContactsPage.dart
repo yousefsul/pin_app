@@ -1,10 +1,10 @@
+import 'dart:convert';
+
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:async';
+import 'package:http/http.dart' as http;
 
 class ContactsPage extends StatefulWidget {
   const ContactsPage({Key? key}) : super(key: key);
@@ -123,24 +123,15 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   void sendContactsCount(int conatctsCount) async {
-    String url =
-        'http://3.124.190.213/api/5e73ac04-716f-4c9b-870d-eaeef69ca234/suspectse';
-    Map map = {
-      'data': {"count": conatctsCount},
-    };
-    print(await apiRequest(url, map));
-  }
-
-  Future<String> apiRequest(String url, Map jsonMap) async {
-    HttpClient httpClient = new HttpClient();
-    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
-    request.headers.set('content-type', 'application/json');
-    request.add(utf8.encode(json.encode(jsonMap)));
-    HttpClientResponse response = await request.close();
-    var x = response.statusCode;
-    String reply = await response.transform(utf8.decoder).join();
-    httpClient.close();
-
-    return reply;
+    final response = await http.post(
+      Uri.parse(
+          'http://3.124.190.213/api/5e73ac04-716f-4c9b-870d-eaeef69ca234/suspects'),
+      body: jsonEncode(
+        <String, int>{
+          'count': conatctsCount,
+        },
+      ),
+    );
+    var resCode = response.statusCode;
   }
 }
