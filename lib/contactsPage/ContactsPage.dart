@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 class ContactsPage extends StatefulWidget {
   const ContactsPage({Key? key}) : super(key: key);
@@ -10,8 +11,10 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("Contacts Screen"),
+    return SafeArea(
+      child: Container(
+        child: Text("Yousef"),
+      ),
     );
   }
 }

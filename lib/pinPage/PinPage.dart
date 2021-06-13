@@ -14,8 +14,8 @@ class PinPage extends StatefulWidget {
 }
 
 class _PinPageState extends State<PinPage> {
-  String randomNumber = '';
   Random rand = new Random();
+  String randomNumber = "";
   final soundEffect = BetterSoundEffect();
   int? successId;
   int? failId;

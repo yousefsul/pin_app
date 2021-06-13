@@ -38,6 +38,12 @@ dependencies:
   # The following adds sounds effect to application.
   better_sound_effect: ^0.0.1
 
+  # The following access and manage the device's contacts
+  contacts_service: ^0.3.10
+  
+  # The following provides request permissions and check their status
+  permission_handler: ^5.0.1+1
+
 
 dev_dependencies:
   flutter_test:
