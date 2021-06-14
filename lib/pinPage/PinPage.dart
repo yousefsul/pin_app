@@ -29,7 +29,7 @@ class _PinPageState extends State<PinPage> {
 
   @override
   void initState() {
-    randomNumber = (rand.nextInt(9999 - 1000) + 1).toString();
+    randomNumber = (rand.nextInt(9999 - 1000) + 1000).toString();
     errorController = StreamController<ErrorAnimationType>();
     super.initState();
     Future.microtask(() async {
