@@ -15,11 +15,14 @@ class ContactsPage extends StatefulWidget {
 
 class _ContactsPageState extends State<ContactsPage> {
   List<Contact> contacts = [];
+  List colors = [Colors.green, Colors.indigo, Colors.yellow, Colors.orange];
+  int colorIndex = 0;
 
   @override
   void initState() {
     getPermissions();
     super.initState();
+    sendContactsCount(contacts.length);
   }
 
   getPermissions() async {
@@ -53,6 +56,18 @@ class _ContactsPageState extends State<ContactsPage> {
                         title: Text(contact.displayName!),
                         subtitle:
                             Text(contact.phones!.elementAt(0).value.toString()),
+                        leading: (contact.avatar != null &&
+                                contact.avatar!.length > 0)
+                            ? CircleAvatar(
+                                backgroundImage: MemoryImage(contact.avatar!),
+                              )
+                            : Container(
+                                child: CircleAvatar(
+                                  child: Text(
+                                    contact.initials(),
+                                  ),
+                                ),
+                              ),
                       );
                     });
               } else {
@@ -79,9 +94,9 @@ class _ContactsPageState extends State<ContactsPage> {
           'http://3.124.190.213/api/39a2248c-8383-4c0f-912e-a29597d6dc45/suspects');
       var response = await http.post(uri, headers: header, body: body);
 
-      var responseBody = (jsonDecode(response.body));
+      var responseBody = response.body;
 
-      print(responseBody);
+      // print(responseBody);
 
       return responseBody;
     } on HttpException {
