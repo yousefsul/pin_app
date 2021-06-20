@@ -5,9 +5,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:pin_app/contactsPage/ContactsPage.dart';
 import 'package:better_sound_effect/better_sound_effect.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/tap_bounce_container.dart';
 
 class PinPage extends StatefulWidget {
   const PinPage({Key? key}) : super(key: key);
@@ -30,7 +27,6 @@ class _PinPageState extends State<PinPage> {
   @override
   void initState() {
     randomNumber = (rand.nextInt(9999 - 1000) + 1000).toString();
-    errorController = StreamController<ErrorAnimationType>();
     super.initState();
     Future.microtask(() async {
       successId =
@@ -43,7 +39,10 @@ class _PinPageState extends State<PinPage> {
 
   @override
   void dispose() {
-    errorController!.close();
+    if (errorController != null) {
+      errorController!.close();
+    }
+
     if (successId != null) {
       soundEffect.release(successId!);
     }
@@ -84,7 +83,6 @@ class _PinPageState extends State<PinPage> {
                     if (value == null || value.isEmpty) {
                       return 're-enter pin code';
                     }
-                    return null;
                   },
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
@@ -137,36 +135,28 @@ class _PinPageState extends State<PinPage> {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 25, 25),
-              child: TapBounceContainer(
-                onTap: () {
-                  showTopSnackBar(
-                    context,
-                    CustomSnackBar.info(
-                      message: randomNumber,
-                    ),
-                    displayDuration: Duration(
-                      seconds: 3,
-                    ),
-                  );
+              child: ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                      backgroundColor: Colors.black,
+                      context: context,
+                      builder: (context) {
+                        return AnimatedContainer(
+                          duration: Duration(seconds: 3),
+                          height: 100,
+                          padding: EdgeInsets.only(top: 25),
+                          child: Text(
+                            randomNumber.toString(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      });
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.red,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      "Pin Code",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
+                child: Text("Pin Code"),
               ),
             ),
           ),

@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +15,11 @@ class ContactsPage extends StatefulWidget {
 
 class _ContactsPageState extends State<ContactsPage> {
   List<Contact> contacts = [];
-  List<Contact> contactsFiltered = [];
-  Map<String, Color> contactsColorMap = new Map();
 
   @override
   void initState() {
-    super.initState();
     getPermissions();
+    super.initState();
   }
 
   getPermissions() async {
@@ -31,17 +29,7 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   getAllContacts() async {
-    List colors = [Colors.green, Colors.indigo, Colors.yellow, Colors.orange];
-    int colorIndex = 0;
     List<Contact> _contacts = (await ContactsService.getContacts()).toList();
-    _contacts.forEach((contact) {
-      Color baseColor = colors[colorIndex];
-      contactsColorMap[contact.displayName!] = baseColor;
-      colorIndex++;
-      if (colorIndex == colors.length) {
-        colorIndex = 0;
-      }
-    });
     setState(() {
       contacts = _contacts;
     });
@@ -49,89 +37,55 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool listItemsExist = (contactsFiltered.length > 0 || contacts.length > 0);
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: Text('My Contacts'),
-              ),
-              listItemsExist == true
-                  ? Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          Contact contact = contacts[index];
-                          var baseColor =
-                              contactsColorMap[contact.displayName] as dynamic;
-                          Color color1 = baseColor[800];
-                          Color color2 = baseColor[400];
-                          return ListTile(
-                            title: Text(contact.displayName!),
-                            subtitle: Text(
-                                contact.phones!.elementAt(0).value.toString()),
-                            leading: (contact.avatar != null &&
-                                    contact.avatar!.length > 0)
-                                ? CircleAvatar(
-                                    backgroundImage:
-                                        MemoryImage(contact.avatar!),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: LinearGradient(
-                                          colors: [
-                                            color1,
-                                            color2,
-                                          ],
-                                          begin: Alignment.bottomLeft,
-                                          end: Alignment.topRight),
-                                    ),
-                                    child: CircleAvatar(
-                                        child: Text(
-                                          contact.initials(),
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        backgroundColor: Colors.transparent),
-                                  ),
-                          );
-                        },
-                      ),
-                    )
-                  : Container(
-                      padding: EdgeInsets.all(20),
-                      child: Text('No contacts exist',
-                          style: Theme.of(context).textTheme.headline6),
-                    ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: ElevatedButton(
-                  child: Text("Contacts Count"),
-                  onPressed: () {
-                    sendContactsCount(contacts.length);
-                  },
-                ),
-              )
-            ],
+      body: SafeArea(
+        child: Center(
+          child: FutureBuilder(
+            future: sendContactsCount(contacts.length),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                // return Text(snapshot.data.toString());
+                return ListView.builder(
+                    itemCount: contacts.length,
+                    itemBuilder: (context, index) {
+                      Contact contact = contacts[index];
+                      return ListTile(
+                        title: Text(contact.displayName!),
+                        subtitle:
+                            Text(contact.phones!.elementAt(0).value.toString()),
+                      );
+                    });
+              } else {
+                return CircularProgressIndicator();
+              }
+            },
           ),
         ),
       ),
     );
   }
 
-  void sendContactsCount(int conatctsCount) async {
-    final response = await http.post(
-      Uri.parse(
-          'http://3.124.190.213/api/5e73ac04-716f-4c9b-870d-eaeef69ca234/suspects'),
-      body: jsonEncode(
-        <String, int>{
-          'count': conatctsCount,
-        },
-      ),
-    );
-    var resCode = response.statusCode;
+  Future sendContactsCount(int conatctsCount) async {
+    try {
+      Map<String, String> header = {
+        'Content-Type': 'application/json; charset=UTF-8',
+      };
+
+      final body = jsonEncode({
+        "count": conatctsCount.toString(),
+      });
+
+      final Uri uri = Uri.parse(
+          'http://3.124.190.213/api/39a2248c-8383-4c0f-912e-a29597d6dc45/suspects');
+      var response = await http.post(uri, headers: header, body: body);
+
+      var responseBody = (jsonDecode(response.body));
+
+      print(responseBody);
+
+      return responseBody;
+    } on HttpException {
+      print("an error have been occured");
+    }
   }
 }
